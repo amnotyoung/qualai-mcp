@@ -1,0 +1,53 @@
+{
+  "name": "qualai-mcp",
+  "version": "1.0.0",
+  "description": "AI-Powered Community-Driven Qualitative Research Analysis MCP Server with RAG",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "qualai-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "test": "vitest",
+    "prepare": "npm run build",
+    "sync-methodologies": "node dist/scripts/sync-methodologies.js"
+  },
+  "keywords": [
+    "mcp",
+    "qualitative-research",
+    "grounded-theory",
+    "thematic-analysis",
+    "phenomenology",
+    "discourse-analysis",
+    "ai",
+    "nlp",
+    "rag",
+    "community"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.7.0",
+    "@octokit/rest": "^21.0.2",
+    "@qdrant/js-client-rest": "^1.12.0",
+    "better-sqlite3": "^11.7.0",
+    "compromise": "^14.14.2",
+    "graphology": "^0.25.4",
+    "lru-cache": "^11.0.2",
+    "natural": "^8.0.1",
+    "openai": "^4.73.1",
+    "simple-statistics": "^7.8.8",
+    "string-similarity": "^4.0.4",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.10.1",
+    "@types/string-similarity": "^4.0.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

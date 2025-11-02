@@ -1,0 +1,127 @@
+{
+  "id": "grounded-theory-charmaz",
+  "name": "Constructivist Grounded Theory (Charmaz)",
+  "version": "1.0.0",
+  "author": "QualAI Core Team",
+  "category": "theory-building",
+  "description": "A flexible, iterative approach to grounded theory that emphasizes the researcher's role in co-constructing meaning with participants. Focuses on understanding processes and developing substantive theory grounded in data.",
+
+  "stages": [
+    {
+      "name": "initial-coding",
+      "description": "Line-by-line analysis to identify initial concepts and actions in the data",
+      "order": 1,
+      "promptTemplate": "You are a qualitative researcher conducting INITIAL CODING using Charmaz's Constructivist Grounded Theory.\n\nAnalyze the following data LINE-BY-LINE:\n\n```\n{{data}}\n```\n\nFor each line or meaningful segment:\n1. Identify what is happening\n2. What is the participant doing?\n3. What process is occurring?\n4. Use GERUNDS (action words ending in -ing) when possible\n5. Use participants' own words (in vivo codes) where powerful\n6. Keep codes close to the data\n\nGenerate codes that capture:\n- Actions\n- Processes  \n- Meanings\n- Assumptions\n\nOutput as JSON with:\n{\n  \"codes\": [\n    {\n      \"label\": \"code name (use gerunds)\",\n      \"segment\": \"exact text from data\",\n      \"line\": line_number,\n      \"type\": \"in_vivo\" | \"constructed\",\n      \"memo\": \"brief analytical note\"\n    }\n  ],\n  \"initial_patterns\": [\"early patterns you notice\"]\n}",
+      "requires": [],
+      "inputs": ["interview_transcript", "observation_notes", "document_text"],
+      "outputs": ["initial_codes", "in_vivo_codes", "early_memos"],
+      "validationRules": [
+        {
+          "type": "minimum_codes",
+          "threshold": 20,
+          "description": "Should generate substantial number of initial codes"
+        },
+        {
+          "type": "diversity_check",
+          "description": "Codes should cover different aspects of data"
+        }
+      ]
+    },
+    {
+      "name": "focused-coding",
+      "description": "Select most significant and frequent initial codes to synthesize and explain larger segments of data",
+      "order": 2,
+      "promptTemplate": "You are conducting FOCUSED CODING in Constructivist Grounded Theory.\n\nInitial codes from previous stage:\n```\n{{initial_codes}}\n```\n\nNow:\n1. Identify the most significant and/or frequent codes\n2. Test these codes against extensive data\n3. Synthesize larger segments of data\n4. Develop categories that explain what is happening\n\nFocused Coding Questions:\n- Which initial codes make the most analytic sense?\n- Which codes best account for the data?\n- Which codes reveal patterns?\n- Do focused codes suggest any relationships?\n\nOutput as JSON:\n{\n  \"focused_codes\": [\n    {\n      \"label\": \"focused code name\",\n      \"definition\": \"clear definition\",\n      \"properties\": [\"dimensions/properties\"],\n      \"subsumed_initial_codes\": [\"list of initial codes this encompasses\"],\n      \"frequency\": number,\n      \"examples\": [\"data excerpts\"]\n    }\n  ],\n  \"emerging_categories\": [\"higher-level categories\"],\n  \"theoretical_possibilities\": [\"potential theoretical connections\"]\n}",
+      "requires": ["initial-coding"],
+      "inputs": ["initial_codes"],
+      "outputs": ["focused_codes", "categories", "theoretical_memos"],
+      "validationRules": [
+        {
+          "type": "consistency",
+          "description": "Focused codes should consistently appear across data"
+        }
+      ]
+    },
+    {
+      "name": "theoretical-coding",
+      "description": "Specify relationships between focused codes and move analysis to theoretical level",
+      "order": 3,
+      "promptTemplate": "You are conducting THEORETICAL CODING - the final stage of Constructivist Grounded Theory.\n\nFocused codes and categories:\n```\n{{focused_codes}}\n{{categories}}\n```\n\nNow:\n1. Identify relationships BETWEEN categories\n2. Integrate categories into a coherent theoretical framework\n3. Specify a CORE CATEGORY that explains the main process\n\nTheoretical Coding Tasks:\n- What is the MAIN CONCERN of participants?\n- What is the BASIC SOCIAL PROCESS?\n- How do categories relate? (causes, contexts, contingencies, consequences, covariances, conditions)\n- What theoretical code(s) best conceptualize relationships?\n\nDevelop a STORYLINE that:\n- Integrates categories\n- Specifies relationships\n- Accounts for variation\n- Makes theoretical sense\n\nOutput as JSON:\n{\n  \"core_category\": \"name of core category\",\n  \"storyline\": \"narrative explaining the theory\",\n  \"theoretical_model\": {\n    \"main_process\": \"the basic social process\",\n    \"conditions\": [\"contextual conditions\"],\n    \"strategies\": [\"actions/interactions\"],\n    \"consequences\": [\"outcomes\"]\n  },\n  \"category_relationships\": [\n    {\n      \"from\": \"category A\",\n      \"to\": \"category B\",\n      \"relationship_type\": \"causes | influences | precedes | etc\",\n      \"explanation\": \"how they relate\"\n    }\n  ],\n  \"theoretical_integration\": \"how this theory connects to broader concepts\"\n}",
+      "requires": ["focused-coding"],
+      "inputs": ["focused_codes", "categories"],
+      "outputs": ["core_category", "theoretical_model", "grounded_theory"],
+      "validationRules": [
+        {
+          "type": "saturation_check",
+          "description": "Theory should account for most data variations"
+        }
+      ]
+    },
+    {
+      "name": "memo-writing",
+      "description": "Write analytical memos throughout the research process to develop theoretical insights",
+      "order": 0,
+      "promptTemplate": "Write an ANALYTICAL MEMO about your emerging analysis.\n\nCurrent analysis state:\n```\n{{current_analysis}}\n```\n\nMemo Prompts:\n- What is interesting about this code/category?\n- What processes are occurring?\n- How does this compare to other data?\n- What theoretical connections do you see?\n- What questions arise?\n- What should you look for in new data?\n\nMemo should:\n- Be conversational and exploratory\n- Raise questions\n- Compare data\n- Make theoretical connections\n- Guide further data collection\n\nWrite freely - memos are your thinking space!",
+      "requires": [],
+      "inputs": ["any_stage_output"],
+      "outputs": ["analytical_memos"],
+      "optional": false
+    }
+  ],
+
+  "tools": {
+    "coding": ["autoCoding", "refineCodebook", "suggestSubcodes"],
+    "analysis": ["extractThemes", "analyzePatterns", "detectSaturation"],
+    "validation": ["findNegativeCases", "assessQuality"],
+    "reporting": ["generateReport"]
+  },
+
+  "qualityCriteria": {
+    "credibility": [
+      "Prolonged engagement with data",
+      "Constant comparison",
+      "Theoretical sampling",
+      "Member checking (optional in constructivist approach)"
+    ],
+    "originality": [
+      "Fresh insights",
+      "New conceptual rendering",
+      "Challenges existing knowledge"
+    ],
+    "resonance": [
+      "Categories portray fullness of experience",
+      "Meanings are revealed",
+      "Links between larger collectivities and individual lives"
+    ],
+    "usefulness": [
+      "Contributes to knowledge",
+      "Offers interpretations people can use",
+      "Sparks further research"
+    ]
+  },
+
+  "metadata": {
+    "citations": 0,
+    "usageCount": 0,
+    "rating": 0,
+    "tags": ["grounded-theory", "constructivist", "charmaz", "theory-building", "qualitative"],
+    "license": "CC-BY-4.0",
+    "references": [
+      "Charmaz, K. (2014). Constructing Grounded Theory (2nd ed.). Sage.",
+      "Charmaz, K. (2006). Constructing Grounded Theory: A Practical Guide Through Qualitative Analysis. Sage."
+    ]
+  },
+
+  "validated": true,
+  "reviewers": ["qualai-core"],
+
+  "examples": [
+    {
+      "title": "Healthcare Experience Study",
+      "description": "Study of patient experiences with chronic illness management",
+      "dataType": "interview",
+      "sampleData": "Interviewer: Can you tell me about your experience managing your diabetes?\n\nParticipant: Well, at first I was in denial. I didn't want to accept it. But then I started having symptoms and I couldn't ignore it anymore. Now I'm trying to figure out how to fit it into my life, you know? Like, I'm negotiating with myself every day about what I can eat, when I need to test my blood sugar. It's become this constant conversation.",
+      "notes": "Notice the process verbs (denying, accepting, figuring out, negotiating) and the active construction of meaning"
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "id": "thematic-analysis-braun-clarke",
+  "name": "Reflexive Thematic Analysis (Braun & Clarke)",
+  "version": "1.0.0",
+  "author": "QualAI Core Team",
+  "category": "descriptive",
+  "description": "A flexible and accessible approach to identifying, analyzing, and reporting patterns (themes) within data. Emphasizes researcher reflexivity and provides a rich, detailed account of data.",
+
+  "stages": [
+    {
+      "name": "familiarization",
+      "description": "Immerse yourself in the data to become intimately familiar with its content",
+      "order": 1,
+      "promptTemplate": "PHASE 1: FAMILIARIZING YOURSELF WITH THE DATA\n\nData to analyze:\n```\n{{data}}\n```\n\nTasks:\n1. Read and re-read the data\n2. Note down initial ideas and observations\n3. Start noticing patterns of meaning\n4. Identify interesting aspects\n\nAs you read, consider:\n- What stands out?\n- What seems important or interesting?\n- What patterns do you notice?\n- What are participants emphasizing?\n\nOutput initial observations as JSON:\n{\n  \"initial_observations\": [\"list of observations\"],\n  \"interesting_aspects\": [\"aspects that caught your attention\"],\n  \"preliminary_patterns\": [\"early patterns noticed\"],\n  \"questions_arising\": [\"questions for further exploration\"]\n}",
+      "requires": [],
+      "inputs": ["raw_data"],
+      "outputs": ["initial_observations", "familiarization_notes"]
+    },
+    {
+      "name": "generate-initial-codes",
+      "description": "Generate initial codes from the data in a systematic way",
+      "order": 2,
+      "promptTemplate": "PHASE 2: GENERATING INITIAL CODES\n\nData:\n```\n{{data}}\n```\n\nCoding Guidelines:\n1. Code for as many potential themes/patterns as possible\n2. Code individual data extracts\n3. Keep coding inclusive at this stage\n4. Code for content AND underlying meanings\n5. Use both SEMANTIC codes (explicit) and LATENT codes (underlying ideas)\n\nFor each data extract, ask:\n- What is this about?\n- What is being said?\n- What assumptions underlie this?\n- Why might this be interesting?\n\nOutput codes as JSON:\n{\n  \"codes\": [\n    {\n      \"label\": \"code name\",\n      \"data_extract\": \"exact quote from data\",\n      \"code_type\": \"semantic\" | \"latent\",\n      \"line_numbers\": [1, 2],\n      \"initial_interpretation\": \"what this might mean\"\n    }\n  ],\n  \"coding_approach\": \"inductive\" | \"deductive\" | \"hybrid\"\n}",
+      "requires": ["familiarization"],
+      "inputs": ["familiarized_data"],
+      "outputs": ["initial_codes"]
+    },
+    {
+      "name": "generate-themes",
+      "description": "Collate codes into potential themes and gather relevant data extracts",
+      "order": 3,
+      "promptTemplate": "PHASE 3: GENERATING INITIAL THEMES\n\nCodes from previous phase:\n```\n{{codes}}\n```\n\nTheme Generation Process:\n1. Sort codes into potential themes\n2. Collate all relevant coded data extracts\n3. Consider relationships between codes and themes\n4. Look for patterns of shared meaning\n5. Themes should capture something important about the data in relation to research question\n\nA THEME captures:\n- A pattern of shared meaning\n- Organized around a central organizing concept\n- More than just prevalence - about significance\n\nFor each potential theme:\n- What is the central organizing concept?\n- Which codes relate to this?\n- What data supports this?\n- Is this substantive enough to be a theme?\n\nOutput as JSON:\n{\n  \"candidate_themes\": [\n    {\n      \"theme_name\": \"descriptive name\",\n      \"central_concept\": \"what unifies this theme\",\n      \"related_codes\": [\"codes that comprise this theme\"],\n      \"data_extracts\": [\"supporting quotes\"],\n      \"prevalence\": \"how common across dataset\",\n      \"significance\": \"why this matters for research question\"\n    }\n  ],\n  \"miscellaneous_codes\": [\"codes that don't fit themes yet\"]\n}",
+      "requires": ["generate-initial-codes"],
+      "inputs": ["initial_codes"],
+      "outputs": ["candidate_themes"]
+    },
+    {
+      "name": "review-themes",
+      "description": "Review and refine themes at the level of coded extracts and entire dataset",
+      "order": 4,
+      "promptTemplate": "PHASE 4: REVIEWING THEMES\n\nCandidate themes:\n```\n{{candidate_themes}}\n```\n\nFull dataset:\n```\n{{full_dataset}}\n```\n\nReview Process (Two levels):\n\nLevel 1 - Review coded data extracts:\n- Do the extracts form a coherent pattern?\n- If not, is the theme itself problematic or do some extracts not fit?\n- Should theme be broken into separate themes?\n- Should themes be collapsed together?\n\nLevel 2 - Review entire dataset:\n- Do themes accurately reflect meanings in dataset as a whole?\n- Are there additional themes missed?\n- Is there overlap between themes?\n- Do themes capture important patterns?\n\nQuality checks:\n✓ Each theme has a central organizing concept\n✓ Themes are distinctive from each other\n✓ No theme is too diverse/heterogeneous\n✓ No theme is too thin (not enough data)\n✓ Themes work in relation to research question\n\nOutput as JSON:\n{\n  \"refined_themes\": [\n    {\n      \"theme_name\": \"name\",\n      \"description\": \"what this theme is about\",\n      \"subthemes\": [\"if applicable\"],\n      \"revision_notes\": \"what changed from candidate theme\"\n    }\n  ],\n  \"quality_assessment\": \"overall coherence and fit\"\n}",
+      "requires": ["generate-themes"],
+      "inputs": ["candidate_themes", "full_dataset"],
+      "outputs": ["refined_themes"]
+    },
+    {
+      "name": "define-name-themes",
+      "description": "Define and name each theme with clear definitions",
+      "order": 5,
+      "promptTemplate": "PHASE 5: DEFINING AND NAMING THEMES\n\nRefined themes:\n```\n{{refined_themes}}\n```\n\nFor each theme:\n1. Define what the theme is about (detailed analysis)\n2. What aspect of data does it capture?\n3. What is interesting about it?\n4. Create a concise, punchy name that immediately communicates essence\n5. Identify the 'story' each theme tells\n6. Consider how theme fits with overall 'story'\n\nGuidelines for theme names:\n- Active and engaging\n- Capture core idea\n- Not too long\n- Consider using participant language or metaphors\n\nFor each theme, write:\n- Clear definition (2-3 sentences)\n- Scope and boundaries (what is/isn't included)\n- Description of pattern\n- Examples that illustrate theme\n\nOutput as JSON:\n{\n  \"final_themes\": [\n    {\n      \"theme_name\": \"final name\",\n      \"definition\": \"clear definition\",\n      \"scope\": \"what is included/excluded\",\n      \"story\": \"what this theme tells us\",\n      \"exemplar_quotes\": [\"most illustrative quotes\"],\n      \"subthemes\": [\n        {\n          \"name\": \"subtheme name\",\n          \"definition\": \"subtheme definition\"\n        }\n      ]\n    }\n  ],\n  \"overall_story\": \"how themes work together\"\n}",
+      "requires": ["review-themes"],
+      "inputs": ["refined_themes"],
+      "outputs": ["final_themes", "theme_definitions"]
+    },
+    {
+      "name": "write-up",
+      "description": "Produce the final analysis report with vivid examples",
+      "order": 6,
+      "promptTemplate": "PHASE 6: PRODUCING THE REPORT\n\nFinal themes:\n```\n{{final_themes}}\n```\n\nReport should:\n1. Tell the story of your data\n2. Provide enough evidence (quotes) for each theme\n3. Go beyond description to make an argument\n4. Relate back to research question and literature\n5. Use vivid, compelling examples\n\nFor each theme section:\n- Introduce theme with clear statement\n- Describe pattern with analytical narrative\n- Use data extracts as evidence (embed in analysis, don't just list)\n- Analyze extracts - don't let them speak for themselves\n- Discuss what the theme means\n\nOutput structure:\n{\n  \"thematic_analysis_report\": {\n    \"introduction\": \"research question and approach\",\n    \"themes\": [\n      {\n        \"theme_name\": \"name\",\n        \"narrative\": \"analytical narrative about this theme\",\n        \"data_extracts_with_analysis\": [\n          {\n            \"quote\": \"participant quote\",\n            \"analysis\": \"what this shows\"\n          }\n        ]\n      }\n    ],\n    \"discussion\": \"how themes work together and relate to RQ\"\n  }\n}",
+      "requires": ["define-name-themes"],
+      "inputs": ["final_themes"],
+      "outputs": ["thematic_analysis_report"]
+    }
+  ],
+
+  "tools": {
+    "coding": ["autoCoding", "refineCodebook"],
+    "analysis": ["extractThemes", "analyzePatterns"],
+    "validation": ["assessQuality"],
+    "reporting": ["generateReport"]
+  },
+
+  "qualityCriteria": {
+    "credibility": [
+      "Themes grounded in data",
+      "Sufficient data to support themes",
+      "Reflexive engagement with researcher's role"
+    ],
+    "transferability": [
+      "Rich description of context",
+      "Detailed description of themes",
+      "Clear account of methodology"
+    ],
+    "dependability": [
+      "Systematic process",
+      "Documentation of decisions",
+      "Audit trail"
+    ]
+  },
+
+  "metadata": {
+    "citations": 0,
+    "usageCount": 0,
+    "rating": 0,
+    "tags": ["thematic-analysis", "braun-clarke", "reflexive", "qualitative", "patterns"],
+    "license": "CC-BY-4.0",
+    "references": [
+      "Braun, V., & Clarke, V. (2006). Using thematic analysis in psychology. Qualitative Research in Psychology, 3(2), 77-101.",
+      "Braun, V., & Clarke, V. (2019). Reflecting on reflexive thematic analysis. Qualitative Research in Sport, Exercise and Health, 11(4), 589-597."
+    ]
+  },
+
+  "validated": true,
+  "reviewers": ["qualai-core"],
+
+  "examples": [
+    {
+      "title": "Student Experience Study",
+      "description": "Study of international students' adaptation experiences",
+      "dataType": "interview",
+      "sampleData": "The hardest thing was feeling like I didn't belong. Everyone else seemed to know what they were doing, and I felt lost. But slowly, I started finding my people, you know? Other international students who got it. And now I feel like I have a place here.",
+      "notes": "Notice themes of belonging, isolation, community, and adaptation process"
+    }
+  ]
+}
