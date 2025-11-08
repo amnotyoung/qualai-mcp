@@ -6,12 +6,15 @@ import Database from 'better-sqlite3';
 import { Entity, Relation, KnowledgeGraph } from '../../types/entities.js';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as os from 'os';
 
 export class SQLiteAdapter {
   private db: Database.Database;
 
   constructor(dbPath?: string) {
-    const defaultPath = path.join(process.cwd(), 'qualai-data', 'knowledge.db');
+    // Use environment variable or home directory for data storage
+    const dataDir = process.env.QUALAI_DATA_DIR || path.join(os.homedir(), '.qualai');
+    const defaultPath = path.join(dataDir, 'knowledge.db');
     const actualPath = dbPath || defaultPath;
 
     // Ensure directory exists

@@ -9,6 +9,15 @@ import { QdrantClient } from '@qdrant/js-client-rest';
 import OpenAI from 'openai';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as os from 'os';
+
+/**
+ * Get the qualai data directory path
+ * Uses QUALAI_DATA_DIR environment variable or defaults to ~/.qualai
+ */
+function getQualaiDataDir(): string {
+  return process.env.QUALAI_DATA_DIR || path.join(os.homedir(), '.qualai');
+}
 
 export class MethodologyRAG {
   private qdrant: QdrantClient | null = null;
@@ -83,7 +92,7 @@ export class MethodologyRAG {
    * Load methodologies from local filesystem
    */
   private async loadLocalMethodologies() {
-    const methodologiesDir = path.join(process.cwd(), 'methodologies');
+    const methodologiesDir = path.join(getQualaiDataDir(), 'methodologies');
 
     if (!fs.existsSync(methodologiesDir)) {
       fs.mkdirSync(methodologiesDir, { recursive: true });
@@ -380,7 +389,7 @@ export class MethodologyRAG {
               synced++;
 
               // Save locally
-              const localPath = path.join(process.cwd(), 'methodologies', `${methodology.id}.json`);
+              const localPath = path.join(getQualaiDataDir(), 'methodologies', `${methodology.id}.json`);
               fs.writeFileSync(localPath, JSON.stringify(methodology, null, 2));
             }
           }
@@ -465,7 +474,7 @@ export class MethodologyRAG {
     }
 
     // Save updated methodology
-    const localPath = path.join(process.cwd(), 'methodologies', `${methodologyId}.json`);
+    const localPath = path.join(getQualaiDataDir(), 'methodologies', `${methodologyId}.json`);
     fs.writeFileSync(localPath, JSON.stringify(methodology, null, 2));
   }
 
