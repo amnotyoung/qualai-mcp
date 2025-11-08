@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "qualai": {
+      "command": "node",
+      "args": ["/home/user/qualai-mcp/dist/index.js"],
+      "env": {
+        "OPENAI_API_KEY": "your-openai-key-here-optional",
+        "QUALAI_GITHUB_REPO": "qualai-community/methodologies"
+      }
+    }
+  }
+}
